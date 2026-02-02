@@ -1,0 +1,10 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="630" fill="#f6f7f4"/>
+  <circle cx="300" cy="450" r="150" fill="#c8d1bf" opacity="0.5"/>
+  <circle cx="900" cy="180" r="100" fill="#f4afbb" opacity="0.4"/>
+  <circle cx="600" cy="315" r="180" fill="#fad6c9" opacity="0.3"/>
+  <!-- Leaf motif -->
+  <path d="M600 200C600 200 550 280 600 350C650 280 600 200 600 200Z" fill="#687a58" opacity="0.6"/>
+  <path d="M600 350L600 450" stroke="#687a58" stroke-width="3" opacity="0.6"/>
+  <text x="600" y="530" font-family="Georgia, serif" font-size="28" fill="#687a58" text-anchor="middle">Lazy Gardener in Texas</text>
+</svg>

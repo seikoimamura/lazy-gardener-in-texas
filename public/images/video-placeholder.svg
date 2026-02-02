@@ -1,0 +1,6 @@
+<svg width="1280" height="720" viewBox="0 0 1280 720" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1280" height="720" fill="#e3e7de"/>
+  <circle cx="640" cy="320" r="200" fill="#c8d1bf"/>
+  <path d="M580 320L720 240V400L580 320Z" fill="#687a58"/>
+  <text x="640" y="580" font-family="Georgia, serif" font-size="32" fill="#687a58" text-anchor="middle">Video Coming Soon</text>
+</svg>
