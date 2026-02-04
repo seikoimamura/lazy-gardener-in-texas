@@ -1,19 +1,35 @@
 import { Metadata } from 'next';
 import BlogCard from '@/components/BlogCard';
-import { blogPosts } from '@/lib/data';
+import { getPublishedPosts } from '@/lib/db';
 
 export const metadata: Metadata = {
   title: 'Blog',
   description: 'Read gardening articles, plant guides, and garden journal entries from Lazy Gardener in Texas.',
 };
 
-export default function BlogPage() {
-  const sortedPosts = [...blogPosts].sort(
-    (a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
-  );
+// Revalidate every 60 seconds
+export const revalidate = 60;
+
+export default async function BlogPage() {
+  const posts = await getPublishedPosts();
 
   // Get all unique tags
-  const allTags = Array.from(new Set(blogPosts.flatMap((post) => post.tags)));
+  const allTags = Array.from(
+    new Set(
+      posts.flatMap((post) => (post.tags ? JSON.parse(post.tags) : []))
+    )
+  );
+
+  // Transform DB posts to match BlogCard expected format
+  const formattedPosts = posts.map((post) => ({
+    slug: post.slug,
+    title: post.title,
+    excerpt: post.excerpt || '',
+    content: post.content,
+    publishedAt: post.published_at,
+    coverImage: post.cover_image || '/images/blog-placeholder.svg',
+    tags: post.tags ? JSON.parse(post.tags) : [],
+  }));
 
   return (
     <>
@@ -50,9 +66,9 @@ export default function BlogPage() {
 
       {/* Blog Grid */}
       <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        {sortedPosts.length > 0 ? (
+        {formattedPosts.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {sortedPosts.map((post, index) => (
+            {formattedPosts.map((post, index) => (
               <div 
                 key={post.slug}
                 className="animate-slide-up opacity-0"

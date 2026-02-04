@@ -1,5 +1,7 @@
 import Link from 'next/link';
 
+const youtubeHandle = process.env.YOUTUBE_HANDLE_NAME || 'LazyGardenerinTexas';
+
 export default function Footer() {
   const currentYear = new Date().getFullYear();
 
@@ -57,7 +59,7 @@ export default function Footer() {
             <ul className="space-y-2">
               <li>
                 <a 
-                  href="https://www.youtube.com/@LazyGardenerinTexas" 
+                  href={`https://www.youtube.com/@${youtubeHandle}`}
                   target="_blank" 
                   rel="noopener noreferrer"
                   className="text-sage-300 hover:text-cream-50 transition-colors text-sm flex items-center gap-2"
