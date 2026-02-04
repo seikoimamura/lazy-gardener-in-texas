@@ -10,6 +10,8 @@ const navLinks = [
   { href: '/blog', label: 'Blog' },
 ];
 
+const youtubeHandle = process.env.YOUTUBE_HANDLE_NAME || 'LazyGardenerinTexas';
+
 export default function Header() {
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -19,14 +21,14 @@ export default function Header() {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 sm:h-20">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-3 group">
-            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-gradient-to-br from-sage-400 to-sage-600 flex items-center justify-center shadow-md group-hover:shadow-lg transition-shadow">
+          <Link href="/" className="flex items-center gap-2 sm:gap-3 group">
+            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-gradient-to-br from-sage-400 to-sage-600 flex items-center justify-center shadow-md group-hover:shadow-lg transition-shadow flex-shrink-0">
               <svg className="w-6 h-6 sm:w-7 sm:h-7 text-cream-50" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
               </svg>
             </div>
-            <div className="hidden sm:block">
-              <h1 className="font-display text-xl text-sage-800 leading-tight">Lazy Gardener</h1>
+            <div>
+              <h1 className="font-display text-base sm:text-xl text-sage-800 leading-tight">Lazy Gardener</h1>
               <p className="text-xs text-sage-500 -mt-0.5">in Texas</p>
             </div>
           </Link>
@@ -54,7 +56,7 @@ export default function Header() {
 
           {/* YouTube Subscribe Button */}
           <a
-            href="https://www.youtube.com/@LazyGardenerInTexas"
+            href={`https://www.youtube.com/@${youtubeHandle}`}
             target="_blank"
             rel="noopener noreferrer"
             className="hidden md:flex items-center gap-2 px-4 py-2 bg-terracotta-500 text-cream-50 rounded-full font-display text-sm hover:bg-terracotta-600 transition-colors shadow-sm hover:shadow-md"
@@ -104,7 +106,7 @@ export default function Header() {
                 );
               })}
               <a
-                href="https://www.youtube.com/@LazyGardenerinTexas"
+                href={`https://www.youtube.com/@${youtubeHandle}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center justify-center gap-2 px-4 py-3 mt-2 bg-terracotta-500 text-cream-50 rounded-xl font-display hover:bg-terracotta-600 transition-colors"

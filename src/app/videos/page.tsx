@@ -7,6 +7,8 @@ export const metadata: Metadata = {
   description: 'Watch gardening videos from Lazy Gardener in Texas - cottage gardening, rose care, and more.',
 };
 
+const youtubeHandle = process.env.YOUTUBE_HANDLE_NAME || 'LazyGardenerinTexas';
+
 export default async function VideosPage() {
   const videos = await getYouTubeVideos();
 
@@ -25,7 +27,7 @@ export default async function VideosPage() {
               Watch my gardening journey unfold—from planting experiments to seasonal updates. 
               All my videos are also available on{' '}
               <a 
-                href="https://www.youtube.com/@LazyGardenerinTexas" 
+                href={`https://www.youtube.com/@${youtubeHandle}`}
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="text-terracotta-600 hover:text-terracotta-700 underline underline-offset-2"
@@ -77,7 +79,7 @@ export default async function VideosPage() {
             Subscribe on YouTube to get notified when I post new gardening content.
           </p>
           <a
-            href="https://www.youtube.com/@LazyGardenerinTexas?sub_confirmation=1"
+            href={`https://www.youtube.com/@${youtubeHandle}?sub_confirmation=1`}
             target="_blank"
             rel="noopener noreferrer"
             className="btn-primary"

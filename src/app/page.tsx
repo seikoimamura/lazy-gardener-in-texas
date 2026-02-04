@@ -1,11 +1,28 @@
 import Link from 'next/link';
 import VideoCard from '@/components/VideoCard';
 import BlogCard from '@/components/BlogCard';
-import { getRecentVideos, getRecentBlogPosts } from '@/lib/data';
+import { getRecentVideos } from '@/lib/data';
+import { getRecentPosts } from '@/lib/db';
+
+const youtubeHandle = process.env.YOUTUBE_HANDLE_NAME || 'LazyGardenerinTexas';
+
+// Revalidate every 60 seconds
+export const revalidate = 60;
 
 export default async function Home() {
   const recentVideos = await getRecentVideos(3);
-  const recentPosts = getRecentBlogPosts(3);
+  const dbPosts = await getRecentPosts(3);
+
+  // Transform DB posts to match BlogCard expected format
+  const recentPosts = dbPosts.map((post) => ({
+    slug: post.slug,
+    title: post.title,
+    excerpt: post.excerpt || '',
+    content: post.content,
+    publishedAt: post.published_at,
+    coverImage: post.cover_image || '/images/blog-placeholder.svg',
+    tags: post.tags ? JSON.parse(post.tags) : [],
+  }));
 
   return (
     <>
@@ -44,7 +61,7 @@ export default async function Home() {
             {/* CTAs */}
             <div className="flex flex-wrap gap-4 animate-slide-up animate-delay-200">
               <a
-                href="https://www.youtube.com/@LazyGardenerinTexas"
+                href={`https://www.youtube.com/@${youtubeHandle}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="btn-primary"
@@ -128,17 +145,23 @@ export default async function Home() {
             </Link>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {recentPosts.map((post, index) => (
-              <div 
-                key={post.slug} 
-                className="animate-slide-up"
-                style={{ animationDelay: `${index * 100}ms` }}
-              >
-                <BlogCard post={post} />
-              </div>
-            ))}
-          </div>
+          {recentPosts.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {recentPosts.map((post, index) => (
+                <div 
+                  key={post.slug} 
+                  className="animate-slide-up"
+                  style={{ animationDelay: `${index * 100}ms` }}
+                >
+                  <BlogCard post={post} />
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-12 bg-white/50 rounded-2xl">
+              <p className="text-sage-600">Blog posts coming soon!</p>
+            </div>
+          )}
 
           <Link href="/blog" className="sm:hidden flex items-center justify-center gap-2 mt-6 text-terracotta-600 font-display">
             View all posts
@@ -168,7 +191,7 @@ export default async function Home() {
               occasional triumphs.
             </p>
             <a
-              href="https://www.youtube.com/@LazyGardenerinTexas?sub_confirmation=1"
+              href={`https://www.youtube.com/@${youtubeHandle}?sub_confirmation=1`}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 px-6 py-3 bg-terracotta-500 text-cream-50 font-display rounded-full hover:bg-terracotta-600 transition-colors shadow-lg"
