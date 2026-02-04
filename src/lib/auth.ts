@@ -3,7 +3,7 @@ import { cookies } from 'next/headers';
 const ADMIN_COOKIE_NAME = 'admin_session';
 const SESSION_DURATION = 60 * 60 * 24 * 7; // 7 days in seconds
 
-export async function verifyPassword(password: string): boolean {
+export async function verifyPassword(password: string): Promise<boolean> {
   return password === process.env.ADMIN_PASSWORD;
 }
 
