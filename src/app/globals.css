@@ -30,6 +30,12 @@
            hover:text-cream-50 hover:shadow-lg hover:-translate-y-0.5;
   }
 
+  .btn-google {
+    @apply inline-flex items-center gap-3 px-6 py-3 bg-white border border-gray-300 
+           text-gray-700 font-medium rounded-lg transition-all duration-300 
+           hover:bg-gray-50 hover:shadow-md;
+  }
+
   .card {
     @apply bg-white/80 backdrop-blur-sm rounded-2xl shadow-md border border-sage-100 
            overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1;

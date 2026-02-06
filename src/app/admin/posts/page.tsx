@@ -1,21 +1,17 @@
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
-import { isAuthenticated, logout } from '@/lib/auth';
+import { auth, signOut, isAdmin } from '@/lib/auth';
 import { getAllPosts } from '@/lib/db';
 import { formatDate } from '@/lib/utils';
 
 export default async function AdminPostsPage() {
-  if (!(await isAuthenticated())) {
+  const session = await auth();
+
+  if (!session?.user || !(await isAdmin())) {
     redirect('/admin');
   }
 
   const posts = await getAllPosts();
-
-  async function handleLogout() {
-    'use server';
-    await logout();
-    redirect('/admin');
-  }
 
   return (
     <div className="min-h-screen bg-cream-50">
@@ -31,14 +27,19 @@ export default async function AdminPostsPage() {
               </Link>
               <h1 className="font-display text-xl text-sage-800">Blog Admin</h1>
             </div>
-            <form action={handleLogout}>
-              <button
-                type="submit"
-                className="text-sm text-sage-500 hover:text-sage-700 transition-colors"
+              <form
+                action={async () => {
+                  'use server';
+                  await signOut({ redirectTo: '/admin' });
+                }}
               >
-                Logout
-              </button>
-            </form>
+                <button
+                  type="submit"
+                  className="text-sm text-sage-500 hover:text-sage-700 transition-colors"
+                >
+                  Sign out
+                </button>
+              </form>
           </div>
         </div>
       </header>

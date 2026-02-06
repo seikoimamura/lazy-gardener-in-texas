@@ -1,6 +1,6 @@
 import { redirect, notFound } from 'next/navigation';
 import Link from 'next/link';
-import { isAuthenticated } from '@/lib/auth';
+import { isAdmin } from '@/lib/auth';
 import { getPostBySlug } from '@/lib/db';
 import PostEditor from '@/components/PostEditor';
 
@@ -9,7 +9,7 @@ interface EditPostPageProps {
 }
 
 export default async function EditPostPage({ params }: EditPostPageProps) {
-  if (!(await isAuthenticated())) {
+  if (!(await isAdmin())) {
     redirect('/admin');
   }
 
@@ -45,8 +45,8 @@ export default async function EditPostPage({ params }: EditPostPageProps) {
               </Link>
               <h1 className="font-display text-xl text-sage-800">Edit Post</h1>
               <span className={`ml-2 inline-flex items-center gap-1.5 px-3 py-1 text-xs font-medium rounded-full ${
-                post.status === 'published' 
-                  ? 'bg-green-100 text-green-700' 
+                post.status === 'published'
+                  ? 'bg-green-100 text-green-700'
                   : 'bg-amber-100 text-amber-700'
               }`}>
                 <span className={`w-1.5 h-1.5 rounded-full ${
@@ -55,7 +55,7 @@ export default async function EditPostPage({ params }: EditPostPageProps) {
                 {post.status === 'published' ? 'Published' : 'Draft'}
               </span>
             </div>
-            
+
             {/* Preview Button */}
             <Link
               href={`/blog/${post.slug}`}

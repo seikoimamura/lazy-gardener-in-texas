@@ -1,9 +1,9 @@
 # Lazy Gardener in Texas
 
-A Next.js website for the "Lazy Gardener in Texas" YouTube channel and blog, featuring an English cottage garden aesthetic designed for the Texas climate.
+A Next.js website for the "Lazy Gardener in Texas" YouTube channel, blog, and Google authentication for administrators, featuring an English cottage garden aesthetic designed for the Texas climate.
 
 🌐 **Live Site:** [Your Vercel URL]  
-📺 **YouTube:** [@LazyGardenerinTexas](https://www.youtube.com/@LazyGardenerinTexas)
+📺 **YouTube:** [@[Your YouTube Handle Name](https://www.youtube.com/@YouTubeHandleName)
 
 ---
 
@@ -21,8 +21,11 @@ A Next.js website for the "Lazy Gardener in Texas" YouTube channel and blog, fea
 - **Draft/Publish workflow** - control when posts go live
 - Admin preview for draft posts
 
-### 🔐 Admin Panel
-- Password-protected admin area (`/admin`)
+### 🔐 Admin Panel with Google Authentication
+- Secure admin login with Google OAuth
+- Whitelist of allowed admin email addresses
+- No passwords to remember or manage
+- Admin area (`/admin`)
 - Create, edit, and delete blog posts
 - Upload and manage images
 - Preview posts before publishing
@@ -42,6 +45,7 @@ A Next.js website for the "Lazy Gardener in Texas" YouTube channel and blog, fea
 | **Next.js 16** | React framework with App Router |
 | **TypeScript** | Type safety |
 | **Tailwind CSS** | Styling |
+| **NextAuth.js v5** | Google OAuth authentication |
 | **Turso (SQLite)** | Blog content database |
 | **Vercel Blob** | Image storage |
 | **YouTube Data API** | Video fetching |
@@ -56,14 +60,15 @@ A Next.js website for the "Lazy Gardener in Texas" YouTube channel and blog, fea
 - npm
 - Turso account (free tier)
 - Vercel account (free tier)
+- Google Cloud Console access (for OAuth)
 - YouTube API key
 
 ### Installation
 
 1. **Clone the repository:**
    ```bash
-   git clone https://github.com/YOUR_USERNAME/lazy-gardener.git
-   cd lazy-gardener
+   git clone https://github.com/YOUR_USERNAME/lazy-gardener-in-texas.git
+   cd lazy-gardener-in-texas
    ```
 
 2. **Install dependencies:**
@@ -71,39 +76,63 @@ A Next.js website for the "Lazy Gardener in Texas" YouTube channel and blog, fea
    npm install
    ```
 
-3. **Set up environment variables:**
+3. **Set up Google OAuth:**
+   
+   Go to [Google Cloud Console](https://console.cloud.google.com/):
+   - Create a new project (or use existing)
+   - Go to "APIs & Services" → "Credentials"
+   - Click "Create Credentials" → "OAuth 2.0 Client ID"
+   - Application type: "Web application"
+   - Authorized redirect URIs:
+     - `http://localhost:3000/api/auth/callback/google` (development)
+     - `https://bbckaty.com/api/auth/callback/google` (production)
+   - Copy the Client ID and Client Secret
+
+4. **Set up environment variables:**
    
    Create a `.env.local` file:
    ```env
+   # Google OAuth
+   GOOGLE_CLIENT_ID=your_google_client_id
+   GOOGLE_CLIENT_SECRET=your_google_client_secret
+   
+   # NextAuth
+   AUTH_SECRET=generate_a_random_32_character_string
+   
+   # Allowed admin emails (comma-separated)
+   ALLOWED_ADMIN_EMAILS=admin@example.com,editor@example.com
+   
    # YouTube
    YOUTUBE_API_KEY=your_youtube_api_key
    YOUTUBE_CHANNEL_ID=your_channel_id
-   YOUTUBE_HANDLE_NAME=LazyGardenerinTexas
+   YOUTUBE_HANDLE_NAME=your_youtube_handle_name
 
    # Turso Database
    TURSO_DATABASE_URL=libsql://your-db.turso.io
    TURSO_AUTH_TOKEN=your_turso_token
 
-   # Admin
-   ADMIN_PASSWORD=your_secure_password
-
    # Vercel Blob (auto-added when you link Vercel)
    BLOB_READ_WRITE_TOKEN=your_blob_token
    ```
 
-4. **Link to Vercel (for Blob storage):**
+5. **Generate AUTH_SECRET:**
+   ```bash
+   openssl rand -base64 32
+   ```
+
+6. **Link to Vercel (for Blob storage):**
    ```bash
    vercel link
    vercel env pull .env.local
    ```
 
-5. **Run the development server:**
+7. **Run the development server:**
    ```bash
    npm run dev
    ```
 
-6. **Initialize the database:**
-   
+8. **Initialize the database:**
+
    Visit `http://localhost:3000/admin` to automatically create the database tables.
 
 ---
@@ -111,15 +140,20 @@ A Next.js website for the "Lazy Gardener in Texas" YouTube channel and blog, fea
 ## Project Structure
 
 ```
-lazy-gardener/
+lazy-gardener-in-texas/
 ├── public/
+│   └── favicon.svg          # favicon
 │   └── images/              # Static images & placeholders
+│       ├── logo.svg
+│       └── blog-placeholder.svg
+│       └── video-placeholder.svg
 ├── src/
 │   ├── app/
 │   │   ├── admin/           # Admin pages (protected)
 │   │   │   ├── page.tsx     # Login page
 │   │   │   └── posts/       # Post management
 │   │   ├── api/
+│   │   │   ├── auth/        # NextAuth API
 │   │   │   ├── posts/       # Blog CRUD API
 │   │   │   └── upload/      # Image upload API
 │   │   ├── blog/            # Public blog pages
@@ -134,7 +168,7 @@ lazy-gardener/
 │   │   ├── BlogCard.tsx
 │   │   └── PostEditor.tsx   # Markdown editor
 │   └── lib/
-│       ├── auth.ts          # Authentication utilities
+│       ├── auth.ts          # NextAuth config
 │       ├── db.ts            # Database connection & queries
 │       ├── data.ts          # YouTube data fetching
 │       ├── types.ts         # TypeScript types
@@ -151,7 +185,7 @@ lazy-gardener/
 
 ### Accessing the Admin Panel
 1. Go to `/admin`
-2. Enter your `ADMIN_PASSWORD`
+2. Click "Sign in with Google" (Your email must be in the `ALLOWED_ADMIN_EMAILS` list)
 3. You'll be redirected to `/admin/posts`
 
 ### Creating a Blog Post
@@ -188,9 +222,22 @@ lazy-gardener/
    - `TURSO_DATABASE_URL`
    - `TURSO_AUTH_TOKEN`
    - `ADMIN_PASSWORD`
+   
+      # Google OAuth
+   `GOOGLE_CLIENT_ID`|your_google_client_id
+   `GOOGLE_CLIENT_SECRET`|your_google_client_secret
+   
+   # NextAuth
+   `AUTH_SECRET`|generate_a_random_32_character_string
+
 4. Deploy!
 
 Vercel Blob token is automatically configured when you create a Blob store in the Vercel dashboard.
+
+### Update Google OAuth for Production
+
+After deployment, add your production URL to Google Cloud Console:
+- Authorized redirect URIs: `https://your-poduction.com/api/auth/callback/google`
 
 ---
 
@@ -198,7 +245,6 @@ Vercel Blob token is automatically configured when you create a Blob store in th
 
 ### 🔐 Phase 1: Member Authentication
 - [ ] Implement NextAuth.js with social login providers
-  - Google OAuth
   - Facebook OAuth
 - [ ] User database schema in Turso
 - [ ] Login/logout UI components
@@ -261,6 +307,9 @@ Vercel Blob token is automatically configured when you create a Blob store in th
 | `TURSO_AUTH_TOKEN` | Yes | Turso authentication token |
 | `ADMIN_PASSWORD` | Yes | Password for admin access |
 | `BLOB_READ_WRITE_TOKEN` | Yes | Vercel Blob storage token |
+| `GOOGLE_CLIENT_ID` | Yes |Your Google  client ID|
+| `GOOGLE_CLIENT_SECRET` | Yes |Your Google client secret|
+| `AUTH_SECRET` | Yes |Auth Secret string|
 
 ---
 
@@ -280,6 +329,7 @@ This project is for personal use. All rights reserved.
 
 - Built with [Next.js](https://nextjs.org/)
 - Hosted on [Vercel](https://vercel.com/)
+- Authentication by [NextAuth.js](https://next-auth.js.org/)
 - Database by [Turso](https://turso.tech/)
 - Developed in collaboration with [Claude](https://claude.ai/) by Anthropic
 - Inspired by English cottage gardens and the joy of lazy gardening 🌿

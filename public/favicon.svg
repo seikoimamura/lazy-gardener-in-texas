@@ -1,0 +1,10 @@
+<svg width="150" height="150" viewBox="0 0 150 150" xmlns="http://www.w3.org/2000/svg">
+        <rect width="150" height="150" fill="#f5f0e8" />
+        <circle cx="75" cy="75" r="70" fill="none" stroke="#4a7c59" stroke-width="3" />
+        <g fill="#d4879c"><ellipse cx="75" cy="35" rx="12" ry="18" transform="rotate(0, 75, 35)" /><ellipse cx="89.2658477444273" cy="45.36474508437579" rx="12" ry="18" transform="rotate(72, 89.2658477444273, 45.36474508437579)" /><ellipse cx="83.8167787843871" cy="62.135254915624216" rx="12" ry="18" transform="rotate(144, 83.8167787843871, 62.135254915624216)" /><ellipse cx="66.1832212156129" cy="62.135254915624216" rx="12" ry="18" transform="rotate(216, 66.1832212156129, 62.135254915624216)" /><ellipse cx="60.734152255572695" cy="45.364745084375784" rx="12" ry="18" transform="rotate(288, 60.734152255572695, 45.364745084375784)" /></g>
+        <circle cx="75" cy="50" r="8" fill="#c97089" />
+        <ellipse cx="50" cy="80" rx="8" ry="15" fill="#4a7c59" transform="rotate(-28, 50, 80)" />
+        <ellipse cx="100" cy="80" rx="8" ry="15" fill="#4a7c59" transform="rotate(28, 100, 80)" />
+        <text x="75" y="120" font-family="Georgia, serif" font-weight="bold" font-size="9" text-anchor="middle" fill="#4a7c59">Lazy Gardener</text>
+        <text x="75" y="132" font-family="Georgia, serif" font-weight="bold" font-size="9" text-anchor="middle" fill="#4a7c59">in Texas</text>
+    </svg>
