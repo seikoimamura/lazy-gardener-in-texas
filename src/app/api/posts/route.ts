@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { isAuthenticated } from '@/lib/auth';
+import { isAdmin } from '@/lib/auth';
 import { createPost, getAllPosts } from '@/lib/db';
 
 export async function GET() {
@@ -13,13 +13,13 @@ export async function GET() {
 }
 
 export async function POST(request: NextRequest) {
-  if (!(await isAuthenticated())) {
+  if (!(await isAdmin())) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
   try {
     const data = await request.json();
-    
+
     if (!data.title || !data.slug || !data.content || !data.published_at) {
       return NextResponse.json(
         { error: 'Missing required fields: title, slug, content, published_at' },
@@ -41,14 +41,14 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(post, { status: 201 });
   } catch (error: any) {
     console.error('Error creating post:', error);
-    
+
     if (error.message?.includes('UNIQUE constraint failed')) {
       return NextResponse.json(
         { error: 'A post with this slug already exists' },
         { status: 400 }
       );
     }
-    
+
     return NextResponse.json({ error: 'Failed to create post' }, { status: 500 });
   }
 }

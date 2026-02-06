@@ -1,10 +1,10 @@
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
-import { isAuthenticated } from '@/lib/auth';
+import { isAdmin } from '@/lib/auth';
 import PostEditor from '@/components/PostEditor';
 
 export default async function NewPostPage() {
-  if (!(await isAuthenticated())) {
+  if (!(await isAdmin())) {
     redirect('/admin');
   }
 

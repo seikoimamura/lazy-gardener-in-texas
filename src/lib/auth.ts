@@ -1,34 +1,40 @@
-import { cookies } from 'next/headers';
+import NextAuth from 'next-auth';
+import Google from 'next-auth/providers/google';
 
-const ADMIN_COOKIE_NAME = 'admin_session';
-const SESSION_DURATION = 60 * 60 * 24 * 7; // 7 days in seconds
+// List of allowed admin email addresses
+const ALLOWED_ADMINS = (process.env.ALLOWED_ADMIN_EMAILS || '').split(',').map(email => email.trim().toLowerCase());
 
-export async function verifyPassword(password: string): Promise<boolean> {
-  return password === process.env.ADMIN_PASSWORD;
-}
+export const { handlers, signIn, signOut, auth } = NextAuth({
+  providers: [
+    Google({
+      clientId: process.env.GOOGLE_CLIENT_ID!,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+    }),
+  ],
+  callbacks: {
+    async signIn({ user }) {
+      // Only allow specific email addresses to sign in
+      if (user.email && ALLOWED_ADMINS.includes(user.email.toLowerCase())) {
+        return true;
+      }
+      return false;
+    },
+    async session({ session, token }) {
+      // Add user info to session
+      if (session.user && token.sub) {
+        session.user.id = token.sub;
+      }
+      return session;
+    },
+  },
+  pages: {
+    signIn: '/admin',
+    error: '/admin',
+  },
+});
 
-export async function createSession(): Promise<string> {
-  const token = crypto.randomUUID();
-  const cookieStore = await cookies();
-  
-  cookieStore.set(ADMIN_COOKIE_NAME, token, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'lax',
-    maxAge: SESSION_DURATION,
-    path: '/',
-  });
-  
-  return token;
-}
-
-export async function isAuthenticated(): Promise<boolean> {
-  const cookieStore = await cookies();
-  const session = cookieStore.get(ADMIN_COOKIE_NAME);
-  return !!session?.value;
-}
-
-export async function logout(): Promise<void> {
-  const cookieStore = await cookies();
-  cookieStore.delete(ADMIN_COOKIE_NAME);
+// Helper function to check if user is authenticated admin
+export async function isAdmin(): Promise<boolean> {
+  const session = await auth();
+  return !!session?.user?.email && ALLOWED_ADMINS.includes(session.user.email.toLowerCase());
 }
