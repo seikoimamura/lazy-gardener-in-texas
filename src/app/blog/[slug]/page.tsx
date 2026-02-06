@@ -3,7 +3,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import { getPublishedPosts, getPublishedPostBySlug, getPostBySlug } from '@/lib/db';
-import { isAuthenticated } from '@/lib/auth';
+import { isAdmin } from '@/lib/auth';
 import { formatDate } from '@/lib/utils';
 
 interface BlogPostPageProps {
@@ -23,7 +23,7 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: BlogPostPageProps): Promise<Metadata> {
   const { slug } = await params;
   const post = await getPublishedPostBySlug(slug);
-  
+
   if (!post) {
     return {
       title: 'Post Not Found',
@@ -91,14 +91,14 @@ function markdownToHtml(content: string): string {
 
   for (const line of lines) {
     const trimmed = line.trim();
-    
+
     // Skip if it's already an HTML element or empty
-    if (trimmed === '' || 
-        trimmed.startsWith('<h') || 
-        trimmed.startsWith('<ul') || 
-        trimmed.startsWith('<ol') || 
-        trimmed.startsWith('<li') || 
-        trimmed.startsWith('<pre') || 
+    if (trimmed === '' ||
+        trimmed.startsWith('<h') ||
+        trimmed.startsWith('<ul') ||
+        trimmed.startsWith('<ol') ||
+        trimmed.startsWith('<li') ||
+        trimmed.startsWith('<pre') ||
         trimmed.startsWith('<blockquote') ||
         trimmed.startsWith('<hr') ||
         trimmed.startsWith('<img') ||
@@ -126,10 +126,10 @@ function markdownToHtml(content: string): string {
 
 export default async function BlogPostPage({ params }: BlogPostPageProps) {
   const { slug } = await params;
-  const isAdmin = await isAuthenticated();
-  
+  const admin = await isAdmin();
+
   // If admin, get any post (including drafts). Otherwise, only published posts.
-  const post = isAdmin 
+  const post = admin
     ? await getPostBySlug(slug)
     : await getPublishedPostBySlug(slug);
 
@@ -144,7 +144,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   return (
     <article>
       {/* Draft Preview Banner */}
-      {isDraft && isAdmin && (
+      {isDraft && admin && (
         <div className="bg-amber-100 border-b border-amber-200">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
             <div className="flex items-center justify-between">
@@ -170,11 +170,11 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
       {/* Header */}
       <header className="relative overflow-hidden bg-gradient-to-br from-sage-100/50 via-cream-50 to-rose-50/30">
         <div className="absolute top-10 right-10 w-64 h-64 bg-rose-200/20 rounded-full blur-3xl" />
-        
+
         <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
           {/* Back link */}
-          <Link 
-            href="/blog" 
+          <Link
+            href="/blog"
             className="inline-flex items-center gap-2 text-sage-600 hover:text-sage-800 transition-colors mb-6"
           >
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -226,7 +226,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
       {/* Content */}
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div 
+        <div
           className="prose prose-sage max-w-none"
           dangerouslySetInnerHTML={{ __html: contentHtml }}
         />
@@ -235,10 +235,10 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
       {/* Footer navigation */}
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
         <div className="section-divider mb-8" />
-        
+
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-          <Link 
-            href="/blog" 
+          <Link
+            href="/blog"
             className="btn-secondary"
           >
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -246,7 +246,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             </svg>
             More Posts
           </Link>
-          
+
           <a
             href={`https://www.youtube.com/@${process.env.NEXT_PUBLIC_YOUTUBE_HANDLE || 'LazyGardenerinTexas'}`}
             target="_blank"
