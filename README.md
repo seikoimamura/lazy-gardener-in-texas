@@ -3,7 +3,7 @@
 A Next.js website for the "Lazy Gardener in Texas" YouTube channel, blog, and Google authentication for administrators, featuring an English cottage garden aesthetic designed for the Texas climate.
 
 🌐 **Live Site:** [Your Vercel URL]
-📺 **YouTube:** [@[Your YouTube Handle Name](https://www.youtube.com/@YouTubeHandleName)
+📺 **YouTube:** [@Your_YouTube_Handle_Name](https://www.youtube.com/@YouTubeHandleName)
 
 ---
 
