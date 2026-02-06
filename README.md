@@ -2,7 +2,7 @@
 
 A Next.js website for the "Lazy Gardener in Texas" YouTube channel, blog, and Google authentication for administrators, featuring an English cottage garden aesthetic designed for the Texas climate.
 
-🌐 **Live Site:** [Your Vercel URL]  
+🌐 **Live Site:** [Your Vercel URL]
 📺 **YouTube:** [@[Your YouTube Handle Name](https://www.youtube.com/@YouTubeHandleName)
 
 ---
@@ -77,7 +77,7 @@ A Next.js website for the "Lazy Gardener in Texas" YouTube channel, blog, and Go
    ```
 
 3. **Set up Google OAuth:**
-   
+
    Go to [Google Cloud Console](https://console.cloud.google.com/):
    - Create a new project (or use existing)
    - Go to "APIs & Services" → "Credentials"
@@ -85,23 +85,23 @@ A Next.js website for the "Lazy Gardener in Texas" YouTube channel, blog, and Go
    - Application type: "Web application"
    - Authorized redirect URIs:
      - `http://localhost:3000/api/auth/callback/google` (development)
-     - `https://bbckaty.com/api/auth/callback/google` (production)
+     - `https://your-production.com/api/auth/callback/google` (production)
    - Copy the Client ID and Client Secret
 
 4. **Set up environment variables:**
-   
+
    Create a `.env.local` file:
    ```env
    # Google OAuth
    GOOGLE_CLIENT_ID=your_google_client_id
    GOOGLE_CLIENT_SECRET=your_google_client_secret
-   
+
    # NextAuth
    AUTH_SECRET=generate_a_random_32_character_string
-   
+
    # Allowed admin emails (comma-separated)
    ALLOWED_ADMIN_EMAILS=admin@example.com,editor@example.com
-   
+
    # YouTube
    YOUTUBE_API_KEY=your_youtube_api_key
    YOUTUBE_CHANNEL_ID=your_channel_id
@@ -221,14 +221,9 @@ lazy-gardener-in-texas/
    - `YOUTUBE_HANDLE_NAME`
    - `TURSO_DATABASE_URL`
    - `TURSO_AUTH_TOKEN`
-   - `ADMIN_PASSWORD`
-   
-      # Google OAuth
-   `GOOGLE_CLIENT_ID`|your_google_client_id
-   `GOOGLE_CLIENT_SECRET`|your_google_client_secret
-   
-   # NextAuth
-   `AUTH_SECRET`|generate_a_random_32_character_string
+   - `GOOGLE_CLIENT_ID`
+   - `GOOGLE_CLIENT_SECRET`
+   - `AUTH_SECRET`
 
 4. Deploy!
 
@@ -305,7 +300,6 @@ After deployment, add your production URL to Google Cloud Console:
 | `YOUTUBE_HANDLE_NAME` | Yes | YouTube handle for links |
 | `TURSO_DATABASE_URL` | Yes | Turso database URL |
 | `TURSO_AUTH_TOKEN` | Yes | Turso authentication token |
-| `ADMIN_PASSWORD` | Yes | Password for admin access |
 | `BLOB_READ_WRITE_TOKEN` | Yes | Vercel Blob storage token |
 | `GOOGLE_CLIENT_ID` | Yes |Your Google  client ID|
 | `GOOGLE_CLIENT_SECRET` | Yes |Your Google client secret|
